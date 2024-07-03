@@ -2,6 +2,13 @@
 
 require "../helper.php";
 
-$uri = $_SERVER['REQUEST_URI'];
+require getBasePath('Router.php');
 
-require getBasePath('router.php');
+$router = new Router();
+
+$routes = require getBasePath('routes.php');
+
+$uri = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
+
+$router->route($uri, $method);

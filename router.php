@@ -1,10 +1,103 @@
 <?php
 
-$routes = require getBasePath('routes.php');
+class Router
+{
+    protected $routes = [];
 
-if (array_key_exists($uri, $routes)) {
-    require(getBasePath($routes[$uri]));
-} else {
-    http_response_code(404);
-    require(getBasePath($routes['404']));
+    public function registerRoute($method, $uri, $controller)
+    {
+        $this->routes[] = [
+            'method' => $method,
+            'uri' => $uri,
+            'controller' => $controller,
+        ];
+    }
+
+    /**
+     * Add a get rooute
+     * 
+     * @param string $uri
+     * @param string $controller
+     * @return void
+     */
+
+    public function get($uri, $controller)
+    {
+        $this->registerRoute('GET', $uri, $controller);
+    }
+
+    /**
+     * Add a post rooute
+     * 
+     * @param string $uri
+     * @param string $controller
+     * @return void
+     */
+
+    public function post($uri, $controller)
+    {
+        $this->registerRoute('POST', $uri, $controller);
+    }
+
+    /**
+     * Add a put rooute
+     * 
+     * @param string $uri
+     * @param string $controller
+     * @return void
+     */
+
+    public function put($uri, $controller)
+    {
+        $this->registerRoute('PUT', $uri, $controller);
+    }
+
+    /**
+     * Add a delete rooute
+     * 
+     * @param string $uri
+     * @param string $controller
+     * @return void
+     */
+
+    public function delete($uri, $controller)
+    {
+        $this->registerRoute('DELETE', $uri, $controller);
+    }
+
+    /**
+     * load error page
+     * 
+     * @param int $httpCode
+     * 
+     * @return void
+     */
+
+    public function error($httpCode = 404)
+    {
+        http_response_code($httpCode);
+        loadView("error/{$httpCode}");
+        exit;
+    }
+
+
+    /**
+     * Route the request
+     * 
+     * @param string $uiri
+     * @param string $method
+     * @return void
+     */
+
+    public function route($uri, $method)
+    {
+        foreach ($this->routes as $route) {
+            if ($route['method'] == $method && $route['uri'] == $uri) {
+                require getBasePath($route['controller']);
+                return;
+            }
+        }
+
+        $this->error();
+    }
 }
