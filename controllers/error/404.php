@@ -1,3 +1,3 @@
 <?php
 
-echo "<h1> Wrong Page </h1>";
+loadView('error/404');
