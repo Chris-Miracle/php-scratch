@@ -1,0 +1,16 @@
+{
+    "name": "chris-miracle/php-scratch",
+    "description": "Job Listing Application",
+    "authors": [
+        {
+            "name": "Chris Miracle",
+            "email": "mcchris54@yahoo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "App\\": "App/"
+        }
+    }
+}
