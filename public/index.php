@@ -1,10 +1,15 @@
 <?php
 
 require "../helper.php";
-require getBasePath('Framework/Router.php');
-require getBasePath('Framework/Database.php');
 
-// Instanriating the rouuter
+spl_autoload_register(function ($class) {
+    $path = getBasePath('Framework/' . $class . '.php');
+    if (file_exists($path)) {
+        require $path;
+    }
+});
+
+// Instantiating the rouuter
 $router = new Router();
 
 // Loading the routes
