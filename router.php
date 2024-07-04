@@ -4,6 +4,15 @@ class Router
 {
     protected $routes = [];
 
+    
+    /**
+     * Registers a new route in the application's routing table.
+     *
+     * @param string $method The HTTP method for the route (e.g. 'GET', 'POST', 'PUT', 'DELETE').
+     * @param string $uri The URI pattern for the route.
+     * @param string $controller The controller/handler for the route.
+     * @return void
+     */
     public function registerRoute($method, $uri, $controller)
     {
         $this->routes[] = [
