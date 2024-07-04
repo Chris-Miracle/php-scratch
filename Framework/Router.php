@@ -102,7 +102,7 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($route['method'] == $method && $route['uri'] == $uri) {
-                require getBasePath($route['controller']);
+                require getBasePath('App/'.$route['controller']);
                 return;
             }
         }
