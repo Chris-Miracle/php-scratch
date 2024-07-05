@@ -38,15 +38,20 @@ class ListingController
      *
      * @param int $id The ID of the listing to retrieve.
      */
-    public function show()
+    public function show($params)
     {
-        $id = $_GET['id'] ?? '';
+        $id = $params['id'] ?? '';
 
         $params = [
                 'id' => $id
             ];
 
         $listing =  $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        if (!$listing) {
+            ErrorController::notFound('Listing not found');
+            return;
+        }
 
         loadView('listings/show', [
             'listing' => $listing
