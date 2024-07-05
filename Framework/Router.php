@@ -2,25 +2,30 @@
 
 namespace Framework;
 
+use App\Controllers\ErrorController;
+
 class Router
 {
     protected $routes = [];
 
-    
+
     /**
      * Registers a new route in the application's routing table.
      *
      * @param string $method The HTTP method for the route (e.g. 'GET', 'POST', 'PUT', 'DELETE').
      * @param string $uri The URI pattern for the route.
-     * @param string $controller The controller/handler for the route.
+     * @param string $action The controller/handler for the route.
      * @return void
      */
-    public function registerRoute($method, $uri, $controller)
+    public function registerRoute($method, $uri, $action)
     {
+        list($controller, $controllerMethod) = explode('@', $action);
+
         $this->routes[] = [
             'method' => $method,
             'uri' => $uri,
             'controller' => $controller,
+            'controllerMethod' => $controllerMethod
         ];
     }
 
@@ -77,22 +82,6 @@ class Router
     }
 
     /**
-     * load error page
-     * 
-     * @param int $httpCode
-     * 
-     * @return void
-     */
-
-    public function error($httpCode = 404)
-    {
-        http_response_code($httpCode);
-        loadView("error/{$httpCode}");
-        exit;
-    }
-
-
-    /**
      * Route the request
      * 
      * @param string $uiri
@@ -104,11 +93,17 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($route['method'] == $method && $route['uri'] == $uri) {
-                require getBasePath('App/'.$route['controller']);
+                // Extra controller and controller method
+                $controller = 'App\\Controllers\\' . $route['controller'];
+                $controllerMethod = $route['controllerMethod'];
+
+                // Instantiate the controller and call the controller method
+                $controllerInstance = new $controller();
+                $controllerInstance->$controllerMethod();
                 return;
             }
         }
 
-        $this->error();
+        ErrorController::notFound();
     }
 }
