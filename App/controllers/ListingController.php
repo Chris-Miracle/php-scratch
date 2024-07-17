@@ -21,7 +21,7 @@ class ListingController
      */
     public function index()
     {
-        $listings = $this->db->query('SELECT * FROM listings LIMIT 6')->fetchAll();
+        $listings = $this->db->query('SELECT * FROM listings')->fetchAll();
 
         loadView('listings/index', [
             'listings' => $listings,
@@ -36,7 +36,7 @@ class ListingController
     /**
      * Retrieves a single listing by its ID and renders the listings/show view with the listing data.
      *
-     * @param int $id The ID of the listing to retrieve.
+     * @param array $params The ID of the listing to retrieve.
      */
     public function show($params)
     {
@@ -121,5 +121,33 @@ class ListingController
 
             redirect('/listings');
         }
+    }
+
+    /**
+     * Deletes a listing from the database by its ID.
+     * 
+     * @param array $params The ID of the listing to delete.
+     * @return void
+     */
+    public function destroy($params)
+    {
+        $id = $params['id'] ?? '';
+
+        $params = [
+            'id' => $id
+        ];
+
+        $listing =  $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        if (!$listing) {
+            ErrorController::notFound('Listing not found');
+            return;
+        }
+
+        // inspectAndDie($listing);
+
+        $this->db->query('DELETE FROM listings WHERE id = :id', $params);
+
+        redirect('/listings');
     }
 }
