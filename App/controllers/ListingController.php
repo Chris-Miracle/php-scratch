@@ -81,6 +81,10 @@ class ListingController
             if (empty($newListingData[$field]) || !Validation::string($newListingData[$field])) {
                 $errors[$field] = ucfirst($field)." is required";
             }
+
+            if ($field === 'email' && !Validation::email($newListingData[$field])) {
+                $errors[$field] = "Invalid email address";
+            }
         }
 
         // inspectAndDie($errors);
