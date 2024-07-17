@@ -5,7 +5,7 @@ namespace App\Controllers;
 use Framework\Database;
 
 
-class ListingController 
+class ListingController
 {
     protected $db;
 
@@ -43,8 +43,8 @@ class ListingController
         $id = $params['id'] ?? '';
 
         $params = [
-                'id' => $id
-            ];
+            'id' => $id
+        ];
 
         $listing =  $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
 
@@ -56,5 +56,24 @@ class ListingController
         loadView('listings/show', [
             'listing' => $listing
         ]);
+    }
+
+    /**
+     * Stores a new listing in the database.
+     * 
+     * @return void
+     */
+
+    public function store()
+    {
+        $allowedFields = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email', 'tags'];
+
+        $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
+
+        $newListingData['user_id'] = 1;
+
+        $newListingData = array_map('sanitize', $newListingData);
+        
+        inspectAndDie($newListingData);
     }
 }
