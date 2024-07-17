@@ -154,4 +154,29 @@ class ListingController
 
         redirect('/listings');
     }
+
+    /**
+     * Retrieves a single listing by its ID and renders the listings/edit view with the listing data.
+     *
+     * @param array $params The ID of the listing to retrieve.
+     */
+    public function edit($params)
+    {
+        $id = $params['id'] ?? '';
+
+        $params = [
+            'id' => $id
+        ];
+
+        $listing =  $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        if (!$listing) {
+            ErrorController::notFound('Listing not found');
+            return;
+        }
+
+        loadView('listings/edit', [
+            'listing' => $listing
+        ]);
+    }
 }
