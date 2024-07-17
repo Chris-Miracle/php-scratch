@@ -74,12 +74,12 @@ class ListingController
 
         $newListingData = array_map('sanitize', $newListingData);
 
-        $requiredFields = ['title', 'description', 'email', 'city', 'state'];
+        $requiredFields = ['title', 'description', 'email', 'salary', 'city', 'state'];
 
         $errors = [];
         foreach ($requiredFields as $field) {
             if (empty($newListingData[$field]) || !Validation::string($newListingData[$field])) {
-                $errors[$field] = ucfirst($field)." is required";
+                $errors[$field] = ucfirst($field) . " is required";
             }
 
             if ($field === 'email' && !Validation::email($newListingData[$field])) {
@@ -94,8 +94,32 @@ class ListingController
                 'listing' => $newListingData,
             ]);
             return;
-        }else{
-            echo 'Success';
+        } else {
+            // Submit the form
+            $fields = [];
+
+            foreach ($newListingData as $field => $value) {
+                $fields[] = $field;
+            }
+
+            $fields = implode(', ', $fields);
+
+            $values = [];
+
+            foreach ($newListingData as $field => $value) {
+                if ($value === '') {
+                    $newListingData[$field] = NULL;
+                }
+                $values[] = ":{$field}";
+            }
+
+            $values = implode(', ', $values);
+
+            $query = "INSERT INTO listings ({$fields}) VALUES ({$values})";
+
+            $this->db->query($query, $newListingData);
+
+            redirect('/listings');
         }
     }
 }

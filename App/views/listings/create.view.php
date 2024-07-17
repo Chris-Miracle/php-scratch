@@ -39,6 +39,10 @@
                 <input type="text" name="benefits" placeholder="Benefits" class="w-full px-4 py-2 border rounded focus:outline-none" value="<?= $listing['benefits'] ?? '' ?>" />
                 <div class="message bg-red-100 my-3"> <?= $errors['benefits'] ?? '' ?> </div>
             </div>
+            <div class="mb-4">
+                <input type="text" name="tags" placeholder="Tags" class="w-full px-4 py-2 border rounded focus:outline-none" value="<?= $listing['tags'] ?? '' ?>" />
+                <div class="message bg-red-100 my-3"> <?= $errors['tags'] ?? '' ?> </div>
+            </div>
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-500">
                 Company Info & Location
             </h2>
