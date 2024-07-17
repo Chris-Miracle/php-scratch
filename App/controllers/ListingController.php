@@ -119,6 +119,9 @@ class ListingController
 
             $this->db->query($query, $newListingData);
 
+            //Set flash message
+            $_SESSION['success_message'] = 'Listing created successfully';
+
             redirect('/listings');
         }
     }
@@ -144,9 +147,10 @@ class ListingController
             return;
         }
 
-        // inspectAndDie($listing);
-
         $this->db->query('DELETE FROM listings WHERE id = :id', $params);
+
+        //Set flash message
+        $_SESSION['success_message'] = 'Listing deleted successfully';
 
         redirect('/listings');
     }
