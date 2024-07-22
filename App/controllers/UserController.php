@@ -147,4 +147,77 @@ class UserController
 
         redirect('/');
     }
+
+
+    /**
+     * Authenticate the user
+     * 
+     * @return void
+     */
+    public function authenticate()
+    {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $errors = [];
+        // Validation
+        if (!Validation::email($email)) {
+            $errors['email'] = 'Please provide a valid email address';
+        }
+
+        // Validation
+        if (!Validation::string($password)) {
+            $errors['password'] = 'Please provide a password';
+        }
+
+        if (!empty($errors)) {
+            loadView('users/login', [
+                'errors' => $errors,
+                'user' => [
+                    'email' => $email,
+                ]
+            ]);
+            exit;
+        }
+
+        // Check if email exists
+        $params = [
+            'email' => $email
+        ];
+
+        $user = $this->db->query('SELECT * FROM users WHERE email = :email', $params)->fetch();
+        if (!$user) {
+            $errors['email'] = 'Incorrect Credentials';
+            loadView('users/login', [
+                'errors' => $errors,
+                'user' => [
+                    'email' => $email,
+                ]
+            ]);
+            exit;
+        }
+
+        // Check if password is correct
+        if (!password_verify($password, $user->password)) {
+            $errors['email'] = 'Incorrect Credentials';
+            loadView('users/login', [
+                'errors' => $errors,
+                'user' => [
+                    'email' => $email,
+                ]
+            ]);
+            exit;
+        }
+
+        // Set session variables
+        Session::set('user', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'city' => $user->city,
+            'state' => $user->state
+        ]);
+
+        redirect('/');
+    }
 }
