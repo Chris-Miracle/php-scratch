@@ -39,11 +39,12 @@ function loadView($name, $data = [])
  * @return void
  */
 
-function loadPartial($name)
+function loadPartial($name, $data = [])
 {
     $partialPath = getBasePath("App/views/partials/{$name}.php");
 
     if (file_exists($partialPath)) {
+        extract($data);
         require $partialPath;
     } else {
         echo "Partial {$name} not found";
@@ -87,4 +88,28 @@ function inspectAndDie($value)
 function formatSalary($salary)
 {
     return '$' . number_format(floatval($salary));
+}
+
+/**
+ * Sanitize Input
+ * 
+ * @param string $dirty
+ * @return string
+ */
+function sanitize($dirty)
+{
+    return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
+}
+
+
+/**
+ * Redirect to a given URL
+ * 
+ * @param string $url
+ * @return void
+ */
+function redirect($url)
+{
+    header("Location: {$url}");
+    exit();
 }

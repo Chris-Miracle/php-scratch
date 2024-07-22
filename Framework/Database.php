@@ -1,5 +1,10 @@
 <?php
 
+namespace Framework;
+
+use PDO;
+use PDOException;
+
 class Database {
 
     public $conn;
@@ -22,7 +27,7 @@ class Database {
         try {
             $this->conn = new PDO($dsn, $config['username'], $config['password'], $options);
         } catch (PDOException $e) {
-            throw new Exception("Could not connect to database: {$e->getMessage()}");
+            throw new \Exception("Could not connect to database: {$e->getMessage()}");
         }
     }
 
@@ -49,7 +54,7 @@ class Database {
             return $sth;
         } catch (PDOException $E) {
             //throw $th;
-            throw new Exception("Could not query the database: {$E->getMessage()}");
+            throw new \Exception("Could not query the database: {$E->getMessage()}");
         }
     }
 }
